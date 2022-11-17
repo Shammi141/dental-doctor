@@ -5,13 +5,15 @@ import AppointmentOptions from './AppointmentOptions';
 
 const AvailableAppointments = ({ selectedDate }) => {
     const [appointmentOptions, setAppointmentOptions] =useState([]);
+    const [treatment, setTreatment] = useState(null);
+
     useEffect(() =>{
         fetch('appointmentOptions.json')
         .then(res => res.json())
         .then(data => setAppointmentOptions(data))
         .catch(err => console.error(err))
     }, []);
-    
+
     return (
         <section className='mt-16'>
             <p className='text-center text-secondary font-bold'>Available Appointments on: {format(selectedDate, 'PP')}</p>
@@ -20,10 +22,18 @@ const AvailableAppointments = ({ selectedDate }) => {
                     appointmentOptions.map(option => <AppointmentOptions
                         key={option._id}
                         appointmentOption={option}
+                        setTreatment={setTreatment}
                     ></AppointmentOptions>)
                 }
             </div>
-            <BookingModal></BookingModal>
+            {
+                treatment && 
+                <BookingModal
+                    selectedDate = {selectedDate}
+                    treatment = {treatment}
+                        setTreatment={setTreatment}
+                ></BookingModal>
+            }
         </section>
     );
 };
